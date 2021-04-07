@@ -1,4 +1,4 @@
-module example.com/example
+module github.com/empire/url-shortener
 
 go 1.16
 
