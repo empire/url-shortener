@@ -7,6 +7,10 @@ import (
 	"github.com/go-pg/pg/v10"
 )
 
+// TODO get custom hash
+// Concurrent
+// Make production ready
+
 func main() {
 	db := connect()
 	defer db.Close()
@@ -33,7 +37,7 @@ func shorten(db *pg.DB, url string) (string, error) {
 		Original: "http://google.com",
 		Hash:     hash,
 	}
-	_, err = db.Model(url1).Insert()
+	_, err = db.Model(url1).Where("hash = ? and original is null", hash).Update()
 	if err != nil {
 		return "", err
 	}
