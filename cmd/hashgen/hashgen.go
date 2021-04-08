@@ -28,6 +28,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+	defer lis.Close()
 
 	log.Printf("Listen to: %s\n", port)
 	s := grpc.NewServer()

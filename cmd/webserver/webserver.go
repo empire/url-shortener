@@ -56,7 +56,7 @@ func main() {
 		}
 		url, err := shortener.GetUrl(c.Request.Context(), req.Code)
 		if err != nil {
-			c.JSON(400, gin.H{"msg": err})
+			c.JSON(404, gin.H{"msg": err})
 			return
 		}
 		c.JSON(307, gin.H{"link": url})

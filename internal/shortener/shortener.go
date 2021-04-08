@@ -46,30 +46,12 @@ func (s *Shortener) Shorten(hash, original string, age int32) (string, error) {
 }
 
 func (s *Shortener) GetUrl(hash string) (string, error) {
-	//	now := time.Now()
+	now := time.Now()
 	var url models.URL
 
-	// CHECK EXPIRATION
-	err := s.db.Model(&url).Where("hash = ? and original is not null", hash).Limit(1).Select()
+	err := s.db.Model(&url).Where("hash = ? and original is not null and expired_at > ?", hash, now).Limit(1).Select()
 	if err != nil {
 		return "", err
 	}
 	return url.Original, nil
 }
-
-//
-//func get(db *pg.DB, hash string) (string, error) {
-//	var url URL
-//
-//	var urls []URL
-//	err := db.Model(&urls).Select()
-//	if err != nil {
-//		return "", err
-//	}
-//
-//	err = db.Model(&url).Where("hash = ? and original is not null", hash).Limit(1).Select()
-//	if err != nil {
-//		return "", err
-//	}
-//	return url.Original, nil
-//}

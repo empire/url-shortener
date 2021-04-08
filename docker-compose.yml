@@ -1,0 +1,31 @@
+version: '3'
+services:
+  db:
+    image: postgres:12.3-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: pass
+    network_mode: "host"
+  hashgen:
+    build:
+      dockerfile: cmd/hashgen/Dockerfile
+      context: .
+    restart: always
+    network_mode: "host"
+  shortener:
+    build:
+      dockerfile: cmd/shortener/Dockerfile
+      context: .
+    restart: always
+    network_mode: "host"
+    depends_on:
+      - "db"
+      - "hashgen"
+  web:
+    build:
+      dockerfile: cmd/webserver/Dockerfile
+      context: .
+    restart: always
+    network_mode: "host"
+    depends_on:
+      - "shortener"
