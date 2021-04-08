@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/empire/url-shortener/internal/generator"
 	"github.com/go-pg/pg/v10"
 )
 
@@ -24,11 +25,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Get by hash: ", orig)
+	fmt.Println("Get by hash: ", hash, orig)
 }
 
 func shorten(db *pg.DB, url string) (string, error) {
-	hash, err := getNewHash(db)
+	hash, err := generate(db)
 	if err != nil {
 		return "", err
 	}
@@ -45,22 +46,12 @@ func shorten(db *pg.DB, url string) (string, error) {
 	return url1.Hash, nil
 }
 
-func getNewHash(db *pg.DB) (string, error) {
-	var url URL
-	err := db.Model(&url).Where("original is null").Limit(1).Select()
-	if err != nil {
-		return generate(db)
-	}
-	return url.Hash, nil
-}
-
 var i int = 100000
 
 func generate(db *pg.DB) (string, error) {
 	hash := ""
 	for count := 0; count < 5; count++ {
-		i++
-		hash = fmt.Sprintf("%d", i)
+		hash = generator.New()
 		url1 := &URL{
 			Hash: hash,
 		}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option go_package = "api/hashgen";
+
+package hashgen;
+
+service HashGenerator {
+  rpc Generate(HashRequest) returns (HashReply) {}
+}
+
+message HashRequest {
+}
+
+message HashReply {
+  string hash = 1;
+}
