@@ -41,8 +41,25 @@ func shortenHandler(ctx *gin.Context) {
 	ctx.JSON(201, gin.H{"redirect": fmt.Sprintf("%s/%s", addr, hash)})
 }
 
+type Retrive struct {
+	Code string `uri:"code" binding:"required"`
+}
+
 func main() {
 	r := gin.Default()
 	r.POST("/shorten", shortenHandler)
+	r.GET("/:code", func(c *gin.Context) {
+		var req Retrive
+		if err := c.ShouldBindUri(&req); err != nil {
+			c.JSON(400, gin.H{"msg": err})
+			return
+		}
+		url, err := shortener.GetUrl(c.Request.Context(), req.Code)
+		if err != nil {
+			c.JSON(400, gin.H{"msg": err})
+			return
+		}
+		c.JSON(307, gin.H{"link": url})
+	})
 	r.Run(addr)
 }
