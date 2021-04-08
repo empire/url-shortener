@@ -31,7 +31,8 @@ func shortenHandler(ctx *gin.Context) {
 		})
 	}
 
-	hash, err := shortener.Shorten(ctx.Request.Context(), shorten.Url, shorten.Age)
+	// Another solution to create sutom tags is using PUT method.
+	hash, err := shortener.Shorten(ctx.Request.Context(), shorten.Url, shorten.Age, shorten.Hash)
 	if err != nil {
 		fmt.Fprintln(gin.DefaultErrorWriter, err)
 		ctx.JSON(400, gin.H{"code": "INVAILD_REQUEST", "message": "Invalid request"})

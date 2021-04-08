@@ -12,6 +12,7 @@ service Shortener {
 message ShortenRequest {
   string url = 1;
   int32 age = 2;
+  string hash = 3;
 }
 
 message ShortenReply {

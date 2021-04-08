@@ -21,7 +21,7 @@ type server struct {
 }
 
 func (s *server) Shorten(ctx context.Context, in *pb.ShortenRequest) (*pb.ShortenReply, error) {
-	hash, err := hashgrpc.Generate()
+	hash, err := getOrGenHash(in)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -33,6 +33,14 @@ func (s *server) Shorten(ctx context.Context, in *pb.ShortenRequest) (*pb.Shorte
 		return nil, err
 	}
 	return &pb.ShortenReply{Code: code}, nil
+}
+
+func getOrGenHash(in *pb.ShortenRequest) (string, error) {
+	hash := in.GetHash()
+	if hash != "" {
+		return hash, nil
+	}
+	return hashgrpc.Generate()
 }
 
 func (s *server) GetUrl(ctx context.Context, in *pb.GetUrlRequest) (*pb.GetUrlReply, error) {

@@ -13,7 +13,7 @@ const (
 	address = "localhost:50052"
 )
 
-func Shorten(ctx context.Context, url string, age int32) (string, error) {
+func Shorten(ctx context.Context, url string, age int32, hash string) (string, error) {
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -23,7 +23,7 @@ func Shorten(ctx context.Context, url string, age int32) (string, error) {
 
 	ctx, cancel := context.WithTimeout(ctx, time.Second)
 	defer cancel()
-	r, err := c.Shorten(ctx, &pb.ShortenRequest{Url: url, Age: age})
+	r, err := c.Shorten(ctx, &pb.ShortenRequest{Url: url, Age: age, Hash: hash})
 	if err != nil {
 		return "", err
 	}
