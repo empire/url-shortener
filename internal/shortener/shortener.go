@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/empire/url-shortener/api/models"
-	"github.com/go-pg/pg"
+	"github.com/go-pg/pg/v10"
 )
 
 type Shortener struct {
@@ -34,7 +34,7 @@ func (s *Shortener) Shorten(hash, original string, age int32) (string, error) {
 		CreatedAt: now,
 		ExpiredAt: now.Add(time.Duration(age) * 24 * time.Hour),
 	}
-	// TODO add retries (it's rare case but it can be happened)
+	// TODO add retries (it's rare case but it can duplciate the hash)
 	rs, err := s.db.Model(url).Insert()
 	log.Println(rs)
 	if err != nil {

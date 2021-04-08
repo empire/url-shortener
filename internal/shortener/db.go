@@ -2,8 +2,8 @@ package shortener
 
 import (
 	"github.com/empire/url-shortener/api/models"
-	"github.com/go-pg/pg"
-	"github.com/go-pg/pg/orm"
+	"github.com/go-pg/pg/v10"
+	"github.com/go-pg/pg/v10/orm"
 )
 
 func connect() (*pg.DB, error) {

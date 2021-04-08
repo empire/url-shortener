@@ -3,6 +3,9 @@ package models
 import (
 	"fmt"
 	"time"
+
+	_ "github.com/go-pg/pg/v10"
+	_ "github.com/go-pg/pg/v10/orm"
 )
 
 type URL struct {
