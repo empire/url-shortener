@@ -2,7 +2,7 @@ package hash
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"time"
 
 	pb "github.com/empire/url-shortener/api/hashgen"
@@ -13,10 +13,10 @@ const (
 	address = "localhost:50051"
 )
 
-func Get() (string, error) {
+func Generate() (string, error) {
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		return "", fmt.Errorf("grpc.Dial: %w", err)
 	}
 	defer conn.Close()
 	c := pb.NewHashGeneratorClient(conn)
@@ -25,7 +25,7 @@ func Get() (string, error) {
 	defer cancel()
 	r, err := c.Generate(ctx, &pb.HashRequest{})
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("c.Generate: %w", err)
 	}
 	return r.GetHash(), nil
 }

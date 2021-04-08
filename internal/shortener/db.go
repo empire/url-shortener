@@ -1,38 +1,27 @@
-package main
+package shortener
 
 import (
-	"fmt"
-
-	"github.com/go-pg/pg/v10"
-	"github.com/go-pg/pg/v10/orm"
+	"github.com/empire/url-shortener/api/models"
+	"github.com/go-pg/pg"
+	"github.com/go-pg/pg/orm"
 )
 
-type URL struct {
-	Id       int64
-	Original string
-	Hash     string `pg:",unique"`
-}
-
-func (u URL) String() string {
-	return fmt.Sprintf("URL<%d %s %v>", u.Id, u.Original, u.Hash)
-}
-
-func connect() *pg.DB {
+func connect() (*pg.DB, error) {
 	db := pg.Connect(&pg.Options{
 		User: "postgres",
 	})
 
 	err := createSchema(db)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return db
+	return db, nil
 }
 
 // createSchema creates database schema for User and Story models.
 func createSchema(db *pg.DB) error {
 	models := []interface{}{
-		(*URL)(nil),
+		(*models.URL)(nil),
 	}
 
 	for _, model := range models {

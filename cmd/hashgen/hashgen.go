@@ -7,6 +7,7 @@ import (
 	"net"
 
 	pb "github.com/empire/url-shortener/api/hashgen"
+	"github.com/empire/url-shortener/internal/generator"
 	"google.golang.org/grpc"
 )
 
@@ -19,7 +20,7 @@ type server struct {
 }
 
 func (s *server) Generate(ctx context.Context, in *pb.HashRequest) (*pb.HashReply, error) {
-	return &pb.HashReply{Hash: "Hello"}, nil
+	return &pb.HashReply{Hash: generator.GenNewCode()}, nil
 }
 
 func main() {
